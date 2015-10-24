@@ -35,7 +35,7 @@ class GUI {
     //wifi
     wifiList = cp5.addScrollableList("wifi")
       .setPosition(20, 120)
-      .setSize(120, 70);
+      .setSize(120, 120);
     this.customizeDropdownList(wifiList);
 
     refreshWifi = cp5.addButton("refresh wifi")
@@ -46,14 +46,14 @@ class GUI {
 
     //wifi password
     wifiPassword = cp5.addTextfield("wifi password")
-      .setPosition(20, 190)
+      .setPosition(20, 250)
       .setSize(120, 20)
       .setPasswordMode(true);
     this.customizeTextfield(wifiPassword);
     
     submit= cp5.addButton("submit")
       .setValue(0)
-      .setPosition(180, 190)
+      .setPosition(180, 250)
       .setSize(120, 20);
     this.customizeButton(submit);
     
@@ -62,13 +62,17 @@ class GUI {
   void click(){
     println("click");
   }
+  
+
+  void fillWifiList(String[] networks) {
+    wifiList.setItems(networks);
+  }
 
   void fillDeviceList(String[] devices) {
     deviceList.setItems(devices);
   }
 
   void customizeDropdownList(ScrollableList sl) {
-    sl.setSize(120, 70);
     sl.setItemHeight(20);
     sl.setBarHeight(20);
     sl.setColorBackground(this.backgroundColor);
