@@ -6,7 +6,7 @@ class GUI {
 
   int activeColor = color(255, 128);
   int backgroundColor = color(60);
-  
+
   ScrollableList deviceList;
   ScrollableList wifiList;
 
@@ -26,7 +26,8 @@ class GUI {
       .setSize(120, 70);
     this.customizeDropdownList(deviceList);
 
-    refreshDevice = cp5.addButton("refresh devices")
+    refreshDevice = cp5.addButton("refreshDevices")
+      .setCaptionLabel("refresh devices")
       .setValue(0)
       .setPosition(180, 50)
       .setSize(120, 20);
@@ -38,32 +39,28 @@ class GUI {
       .setSize(120, 120);
     this.customizeDropdownList(wifiList);
 
-    refreshWifi = cp5.addButton("refresh wifi")
+    refreshWifi = cp5.addButton("refreshWifi")
+      .setCaptionLabel("refresh wifi")
       .setValue(0)
       .setPosition(180, 120)
       .setSize(120, 20);
     this.customizeButton(refreshWifi);
 
     //wifi password
-    wifiPassword = cp5.addTextfield("wifi password")
+    wifiPassword = cp5.addTextfield("wifiPassword")
+      .setCaptionLabel("wifi password")
       .setPosition(20, 250)
       .setSize(120, 20)
       .setPasswordMode(true);
     this.customizeTextfield(wifiPassword);
-    
+
     submit= cp5.addButton("submit")
       .setValue(0)
       .setPosition(180, 250)
       .setSize(120, 20);
     this.customizeButton(submit);
-    
   }
   
-  void click(){
-    println("click");
-  }
-  
-
   void fillWifiList(String[] networks) {
     wifiList.setItems(networks);
   }

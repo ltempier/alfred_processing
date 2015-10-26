@@ -1,29 +1,53 @@
- //<>//
-Device device;
+DeviceList deviceList; //<>//
 GUI gui;
 Wifi wifi;
+Boolean isSetup = false;
+Network selectNetwork;
+Device selectDevice;
+
 
 void setup() {  
   size(400, 400);
-  wifi = new Wifi();
-
-  
   gui = new GUI(this);
-  device = new Device(this);
-  gui.fillDeviceList(device.getPorts());
-  gui.fillWifiList(wifi.getNetworks());
+  wifi = new Wifi();
+  deviceList = new DeviceList(this);
+
+  gui.fillDeviceList(deviceList.getList());
+  gui.fillWifiList(wifi.getList());
+
+  isSetup = true;
 }
 
 void draw() {
   background(color(249, 242, 119));
 }
 
-void controlEvent(ControlEvent theEvent) {
-  if (theEvent.isGroup()) {
-    println("event from group : "+theEvent.getGroup().getValue()+" from "+theEvent.getGroup());
-  } else if (theEvent.isController()) {
+void refreshWifi(int n) {
+  if (!isSetup)
+    return;
+  gui.fillWifiList(wifi.getList());
+}
 
-    Controller controller = theEvent.getController();
-    println("event from controller : "+theEvent.getController().getValue()+" from "+controller);
-  }
+void refreshDevices(int n) {
+  if (!isSetup)
+    return;
+  gui.fillDeviceList(deviceList.getList(true));
+}
+
+void wifi(int n) {
+  if (!isSetup)
+    return;
+  selectNetwork = wifi.getNetwork(n);
+}
+
+void  devices(int n) {
+  if (!isSetup)
+    return;
+  selectDevice = deviceList.getDevice(n);
+}
+
+void  submit(int n) {
+  if (!isSetup)
+    return;
+  println("submit");
 }

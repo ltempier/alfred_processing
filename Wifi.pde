@@ -51,41 +51,77 @@ class Wifi {
     return output.toString();
   }
 
-  String[] getNetworks(Boolean refresh) {
-    if (refresh == true)
-      this.scan();
-    return this.getNetworks();
+  Network getNetwork(int index) {
+    if (index <= this.networks.size())
+      return this.networks.get(index);
+    throw new IllegalArgumentException("Wifi not found");
   }
 
-  String[] getNetworks() {
+  String[] getList(Boolean refresh) {
+    if (refresh == true)
+      this.scan();
+    return this.getList();
+  }
+
+  String[] getList() {
     String[] names = new String[0];
-    for (Network network : this.networks) {
-      names = append(names, network.getSsid());
-    }
+    for (Network network : this.networks) 
+      names = append(names, network.getName());
     return names;
   }
 }
 
 class Network implements Comparable<Network> {
-  String ssid, rssi, security;
+  String ssid, password;
+  int rssi, security, cipher;
+
+  Network() {
+  }
+
   Network (String _ssid, String _rssi, String _security) {
-    this.ssid = _ssid.replaceAll("^\\s+", "");
-    this.rssi = _rssi.replaceAll("\\s+", "");
-    this.security = _security.replaceAll("\\s+", "");
+    this.setSsid(_ssid);
+    this.setRssi(_rssi);
+    this.setSecurity(_security);
+  }
+
+  void setSsid(String str) {
+    this.ssid = str.replaceAll("^\\s+", ""); //trim()
+  }
+
+  void setRssi(String str) {
+    str = str.replaceAll("\\s+", "");
+    this.rssi = Integer.parseInt(str);
+  }
+
+  void setSecurity(String str) {
+    str = str.replaceAll("\\s+", "");
+    if (match(str, "WPA2") != null )
+      this.security = 3;
+    else if (match(str, "WPA") != null )
+      this.security = 2;
+    else if (match(str, "WEP")!= null)
+      this.security = 1;
+    else if (match(str, "NONE")!= null)
+      this.security = 0;
+
+    if (match(str, "AES")!= null && match(str, "TKIP")!= null )
+      this.cipher = 3;
+    else if (match(str, "TKIP")!= null)
+      this.cipher = 2;    
+    else if (match(str, "AES")!= null)
+      this.cipher = 1;
+  }
+
+  void setPassword(String str) {
+    str = str.replaceAll("\\s+", "");
+    this.password = str;
   }
 
   int compareTo(Network network) {
-    return network.getRssi() - this.getRssi();
+    return network.rssi - this.rssi;
   }
 
-  int getRssi() {
-    return Integer.parseInt(this.rssi);
-  }
-
-  String getSsid() {
+  String getName() {
     return this.ssid;
-  }
-  String toString() {
-    return this.ssid + " " + this.rssi + " " +this.security + " " ;
   }
 }
