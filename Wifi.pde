@@ -27,7 +27,17 @@ class Wifi {
     } else if (match(this.osName, "Windows")!= null) {
       println("todo");
     } else if (match(this.osName, "Linux")!= null) {
-      println("todo");
+      String command = " nmcli dev wifi list";
+      String res = this.executeCommand(command);
+      String[] rows = res.split("\n");
+      for (int i=1; i< rows.length; i++) {
+        String row = rows[i];
+        String ssid = row.substring(0, 34).replaceAll("^\\s+", "").replaceAll("'", ""); //left trim
+        String rssi = row.substring(93, 95).replaceAll("\\s+", "");
+        String security = row.substring(102, 113).replaceAll("\\s+", "");
+        Network network = new Network(ssid, rssi, security);
+        this.networks.add(network);
+      }
     }
 
     Collections.sort(this.networks);
