@@ -1,4 +1,4 @@
-import controlP5.*; //<>// //<>//
+import controlP5.*; //<>// //<>// //<>//
 
 class GUI {
   ControlP5 cp5;
@@ -49,16 +49,21 @@ class GUI {
     //wifi password
     wifiPassword = cp5.addTextfield("wifiPassword")
       .setCaptionLabel("wifi password")
+      .setAutoClear(false)
       .setPosition(20, 250)
       .setSize(120, 20)
       .setPasswordMode(true);
     this.customizeTextfield(wifiPassword);
-
+    
     submit= cp5.addButton("submit")
       .setValue(0)
       .setPosition(180, 250)
       .setSize(120, 20);
     this.customizeButton(submit);
+  }
+  
+  String getPasswordValue(){
+    return wifiPassword.getText();
   }
   
   void fillWifiList(String[] networks) {

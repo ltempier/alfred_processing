@@ -134,4 +134,27 @@ class Network implements Comparable<Network> {
   String getName() {
     return this.ssid;
   }
+
+  String toString() {
+    return "SSID: " + this.ssid + "\nPassword: "+ this.password;
+  }
+
+  String getResponse(String serialResponse, Boolean abord) {
+
+    abord = false;
+
+    if (match(serialResponse, "SSID:") != null )
+      return this.ssid;
+    else if (match(serialResponse, "Password:") != null )
+      return this.password;
+    else if (match(serialResponse, "Security 0=unsecured, 1=WEP, 2=WPA, 3=WPA2:") != null )
+      return String.valueOf(this.security);
+    else if (match(serialResponse, "Security Cipher 1=AES, 2=TKIP, 3=AES+TKIP:") != null )
+      return String.valueOf(this.cipher);
+
+    abord = true;
+    //else if (match(serialResponse, "Spark <3 you!") != null )
+    //  return "";
+    return "";
+  }
 }

@@ -1,10 +1,10 @@
-DeviceList deviceList; //<>//
+DeviceList deviceList; //<>// //<>//
 GUI gui;
 Wifi wifi;
 Boolean isSetup = false;
+
 Network selectNetwork;
 Device selectDevice;
-
 
 void setup() {  
   size(400, 400);
@@ -38,16 +38,32 @@ void wifi(int n) {
   if (!isSetup)
     return;
   selectNetwork = wifi.getNetwork(n);
+  println("set wifi : "+selectNetwork.getName());
 }
 
 void  devices(int n) {
   if (!isSetup)
     return;
   selectDevice = deviceList.getDevice(n);
+  println("set device : "+selectDevice.getName());
+}
+
+void wifiPassword(String theText) {
+  println("wifiPassword " + theText);
 }
 
 void  submit(int n) {
   if (!isSetup)
     return;
-  println("submit");
+
+  if (selectNetwork != null && selectDevice != null) {
+    String password = gui.getPasswordValue();
+    selectNetwork.setPassword(password);
+    selectDevice.configureWifi(selectNetwork);
+    
+    
+    
+  } else {
+    println("bad selection ");
+  }
 }

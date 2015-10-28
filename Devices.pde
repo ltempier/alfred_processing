@@ -28,7 +28,7 @@ class DeviceList {
       this.scan();
     return this.getList();
   }
-  
+
   String[] getList() {  
     String[] names = new String[0];
     for (Device device : this.devices) {
@@ -104,6 +104,15 @@ class Device {
     }
   }
 
+  String getName() {
+    return this.port;
+  }
+
+  void  waitForResponse(Serial serial) {
+    while (serial.available() <= 0)
+      delay(10);
+  }
+
   void write(String str) {
     try {
       Serial serial = new Serial(this.parent, this.port, 9600);
@@ -112,26 +121,49 @@ class Device {
     catch (Exception e) {
     }
   }
+
   void write(Serial serial, String str) {
-    serial.write(str.getBytes());
+    this.write(serial, str, true);
   }
 
-  String getName() {
-    return this.port;
+  void write(Serial serial, String str, boolean log) {
+    serial.write(str.getBytes());
+    if (log)
+      println("<- "+str);
+  }
+
+  String read(Serial serial) {
+    return this.read(serial, true);
+  }
+
+  String read(Serial serial, boolean log) {
+    String response = "";
+    if (serial.available() > 0)
+      response = serial.readString();
+    if (log)
+      println("-> "+response);
+    return response;
   }
 
   void configureWifi(Network wifi) {
+    println("Start configure:");
+    println(wifi.toString());
     try {
       Serial serial = new Serial(this.parent, this.port, 9600);
       this.write(serial, "w");
-      this.waitForResponse(serial);
+      boolean abord = false;
+      for (int i=0; i< 10; i++) {
+        this.waitForResponse(serial);
+        String command = this.read(serial);
+        String response = wifi.getResponse(command, abord);
+        if (abord)
+          break;
+        this.write(serial, response);
+      }
+      serial.clear();
+      serial.stop();
     }
     catch (Exception e) {
     }
-  }
-
-  void  waitForResponse(Serial serial) {
-    while (serial.available() <= 0)
-      delay(10);
   }
 }
